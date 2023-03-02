@@ -72,7 +72,11 @@ library(ggpmisc); library(ggplot2); library(plotly); library(palmerpenguins)
 library(ggplot2); library(magrittr); library(ggpubr); library(tidyverse)
 library(ComplexHeatmap); library(viridis)
 ```
-
+```{r, warning=FALSE}
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install("ComplexHeatmap")
+```
 
 # [4.0 PUNTOS] 1. Pingüinos de Palmer
 
@@ -161,6 +165,43 @@ Así mismo, se observa las edades de tipo de especies del pinguino, ya que se di
 - `p5` tiene un correlation plot de las variables numéricas de longitud de pico, ancho de pico, longitud de aleta y masa corporal. La figura tiene  que tener la apariencia de la imagen de abajo, este se encuentra resuelto en la  página de [ggcorrplot](http://www.sthda.com/english/wiki/ggcorrplot-visualization-of-a-correlation-matrix-using-ggplot2).
 ```{r}
 install.packages("ggcorrplot")
+```
+
+```{r}
+library(ggcorrplot)
+library(gridExtra)
+
+library(palmerpenguins)
+
+
+data <- na.omit(penguins)
+
+p4 <- ggplot(data, aes(x = body_mass_g, y = flipper_length_mm)) +
+  geom_point(aes(color = sex)) +
+  geom_smooth(method = "lm", se = FALSE) +
+  facet_wrap(~sex + island) +
+  stat_poly_eq(formula = y ~ x,
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "~")),
+               parse = TRUE,
+               label.x.npc = "right",
+               label.y.npc = "top")
+
+p4
+
+corr_data <- data[, c("bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g")]
+
+corr_matrix <- cor(corr_data)
+
+p5 <- ggcorrplot(corr_matrix,
+                 lab = TRUE,
+                 type = "lower",
+                 outline.col = "white",
+                 ggtheme = theme_gray())
+
+p5
+
+
+grid.arrange(p4, p5, ncol = 2)
 ```
 
 ```{r echo = FALSE, results = 'asis'}
