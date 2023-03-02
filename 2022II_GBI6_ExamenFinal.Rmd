@@ -1,7 +1,7 @@
 ---
 title: "Bioinformática- GBI6"
 subtitle: "EXAMEN FINAL - 2022II"
-author: "APELLIDO, Nombre"
+author: "Campos Micaela"
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -113,6 +113,8 @@ cat(paste0('<center><img src="', img3,'" width="200" height="200" alt=""></cente
 ## Read dataset Palmer Penguins
 pinguinos = penguins
 pinguinos <- na.omit(pinguinos)
+ 
+install.packages("repr")
 
 ## Jitter plot + boxplot
 
@@ -148,11 +150,18 @@ ggarrange(p3, ggarrange(p1, p2, labels =c("b", "c"), nrow=2),
 
 **INTERPRETACIÓN**
 
+En la figura anterior da a conocer las 3 especies de pingunos que se van diferenciando según el pico, ya sea el ancho o el largo del pico, tambien se diferencia por la coloracion del pico de cada especie.
+Así mismo, se observa las edades de tipo de especies del pinguino, ya que se diferencia tambien por el sexo y el lugar al que pertenece cada pinguino
+
+
 ### [3.0 puntos] 1.2. Genere dos gráficas `p4` y `p5`donde: 
 
 - `p4` es una regresión de `x: body_mass_g` y `y: flipper_length_mm`, que tiene inserto la ecuación de la regresión y el $R^2$. Asimismo tiene una coloración por sexo, y una separación por sexo e isla. 
 
-- `p5` tiene un correlation plot de las variables numéricas de longitud de pico, ancho de pico, longitud de aleta y masa corporal. La figura tiene  que tener la apariencia de la imagen de abajo, este se encuentra resuelto en la  página de [ggcorrplot](http://www.sthda.com/english/wiki/ggcorrplot-visualization-of-a-correlation-matrix-using-ggplot2). 
+- `p5` tiene un correlation plot de las variables numéricas de longitud de pico, ancho de pico, longitud de aleta y masa corporal. La figura tiene  que tener la apariencia de la imagen de abajo, este se encuentra resuelto en la  página de [ggcorrplot](http://www.sthda.com/english/wiki/ggcorrplot-visualization-of-a-correlation-matrix-using-ggplot2).
+```{r}
+install.packages("ggcorrplot")
+```
 
 ```{r echo = FALSE, results = 'asis'}
 img4 = "http://www.sthda.com/sthda/RDoc/figure/ggplot2/ggcorrplot-demo-ggcorrplot-7.png"
@@ -170,15 +179,32 @@ cat(paste0('<center><img src="', img4,'" width="200" height="200" alt=""></cente
 ```{r p1.1, echo=TRUE, warning=FALSE, fig.height=8}
 # Escriba aquí su código
 
+penguins %>%
+  ggplot(aes(x = bill_length_mm)) +
+  geom_histogram()
 ```
 
 **INTERPRETACIÓN**
-
-
+En la siguiente tabla da a conocer los largos de los picos del piguino palmer, en el cual se diferencia el largo del pico que va depender a tamañano de pinguino
+ 
+```{r} 
+penguins %>% 
+  ggplot(aes(x = island)) + 
+  geom_bar()
+```
 # [4.0 PUNTOS] 2. MAPAS DE CALOR DE EXPRESIÓN GÉNICA
 
 Los datos de expresión de genes son extensos, hay una gran cantidad de genes y asimismo una gran cantidad de muestras de tejidos o lineas celulares. En este ejemplo se desea ver el nivel de relación de las muestras de diferentes tipos de tejidos en base a las cuantificaciones de niveles de expresión genética. La data ejemplo es sintética, y están guardadas en forma de tablas y se cargan con la función `load('nombre.RData')`. Está basado en [Simple guide to heatmaps](https://davemcg.github.io/post/simple-heatmaps-with-complexheatmaps/).
+# Codigo para ver el mapa de calor
 
+```{r}penguins %>% 
+  ggplot(aes(x = bill_depth_mm, y = bill_length_mm, color = species)) +
+  geom_point()
+
+penguins %>% 
+  ggplot(aes(x = bill_depth_mm, y = bill_length_mm, shape = species)) +
+  geom_point()
+```
 ```{r}
 load('data/expression.Rdata') # carga la tabla de expression
 load('data/metadata.Rdata')
